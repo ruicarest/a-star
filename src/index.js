@@ -1,7 +1,9 @@
 import "./styles.css";
+import { astar } from "./astar";
 
 const TILES_NUMBER = 400;
-const TILES_WIDTH = 40;
+const TILES_WIDTH = 20;
+const TILES_HEIGHT = 20;
 const BUILDINGS_NUMBER = 5;
 
 const TILETYPES = {
@@ -12,7 +14,11 @@ const TILETYPES = {
   water: 4,
 };
 
-var mapTilesArray = [...Array(TILES_NUMBER)].map(() => TILETYPES.untouched);
+var mapTilesArray = [...Array(TILES_HEIGHT)].map(() =>
+  [...Array(TILES_WIDTH)].map(() => {
+    return { f: 0, g: 0, h: 0 };
+  })
+);
 
 var buildingIndexes = [];
 
@@ -232,33 +238,59 @@ function writeOnCanvas(tilesArray = mapTilesArray, isError = false) {
   }
 
   let element = document.querySelector("#canvas");
+
+  var tiles = "";
+
+  for (var yPos = 0; yPos < tilesArray.length; yPos++) {
+    for (var xPos = 0; xPos < tilesArray[yPos].length; xPos++) {
+      tiles += tilesArray[yPos][xPos];
+    }
+    tiles += "<br>";
+  }
+
   //let tiles = tilesArray.reduce((acc, numb) => {return acc + "" + numb});
 
-  let tiles = tilesArray.reduce((acc, numb, index) => {
-    return index % TILES_WIDTH == 0 ? acc + "<br>" + numb : acc + "" + numb;
-  });
+  // let tiles = tilesArray.reduce((acc, numb, index) => {
+  //   return index % TILES_WIDTH == 0 ? acc + "<br>" + numb : acc + "" + numb;
+  // });
 
   element.innerHTML = tiles;
+  console.log("escreveu");
 }
 
-const isTestOk = testAspectRatio();
-
+//const isTestOk = testAspectRatio();
+const isTestOk = true;
 if (isTestOk) {
-  setInterval(function () {
-    mapTilesArray = [...Array(TILES_NUMBER)].map(
-      (value) => TILETYPES.untouched
-    );
-    drawBuildingsWithRoads(BUILDINGS_NUMBER);
-    writeOnCanvas();
-  }, 1000);
+  // setInterval(function () {
+  //   mapTilesArray = [...Array(TILES_NUMBER)].map(
+  //     (value) => TILETYPES.untouched
+  //   );
+  //   drawBuildingsWithRoads(BUILDINGS_NUMBER);
+  //   writeOnCanvas();
+  // }, 1000);
 
   //drawBuildings(BUILDINGS_NUMBER);
   //drawRoadsConnectingBuildings();
 
   //writeOnCanvas();
 
-  console.log(getNeighboursTiles(Math.floor(Math.random() * TILES_NUMBER)));
-  console.log(getNeighboursIndexes(Math.floor(Math.random() * TILES_NUMBER)));
+  // console.log(getNeighboursTiles(Math.floor(Math.random() * TILES_NUMBER)));
+  // console.log(getNeighboursIndexes(Math.floor(Math.random() * TILES_NUMBER)));
+
+  var newSearch = astar.search(
+    mapTilesArray,
+    { pos: { x: 1, y: 2 } },
+    { pos: { x: 4, y: 19 } }
+  );
+
+  var createdMap = mapTilesArray.map((index) =>
+    index.map((position) =>
+      newSearch.path.find((node) => node.id == position.id) ? 1 : 0
+    )
+  );
+  console.log(createdMap);
+
+  writeOnCanvas(createdMap);
 } else {
   writeOnCanvas("isTestOk failed", true);
 }
