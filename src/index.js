@@ -14,13 +14,17 @@ const TILETYPES = {
   water: 4,
 };
 
-var mapTilesArray = [...Array(TILES_HEIGHT)].map(() =>
-  [...Array(TILES_WIDTH)].map(() => {
-    return { f: 0, g: 0, h: 0 };
+var mapTilesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
+  [...Array(TILES_WIDTH)].map((curr, xPos) => {
+    return {
+      tileType: 0,
+      pos: {
+        x: xPos,
+        y: yPos,
+      },
+    };
   })
 );
-
-var buildingIndexes = [];
 
 function testAspectRatio() {
   return TILES_NUMBER % TILES_WIDTH != 0 ? false : true;
@@ -40,6 +44,20 @@ function isInFirstLine(index) {
 
 function isInLastLine(index) {
   return index + TILES_WIDTH >= TILES_NUMBER ? true : false;
+}
+
+function resetmapTilesArray() {
+  mapTilesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
+    [...Array(TILES_WIDTH)].map((curr, xPos) => {
+      return {
+        tileType: 0,
+        pos: {
+          x: xPos,
+          y: yPos,
+        },
+      };
+    })
+  );
 }
 
 // 0 1 2
@@ -138,51 +156,95 @@ function getTilePositionHorizontal(index) {
   return Math.floor(index % TILES_WIDTH);
 }
 
-function drawRoad(start, end) {
-  var startPositionVertical = getTilePositionVertical(start);
-  var startPositionHorizontal = getTilePositionHorizontal(start);
-  var endPositionVertical = getTilePositionVertical(end);
-  var endPositionHorizontal = getTilePositionHorizontal(end);
+function drawRoad(map, path) {
+  let newMap = map;
 
-  var nextPost = start;
+  path.forEach((curr) => {
+    newMap[curr.pos.y][curr.pos.x].tileType =
+      newMap[curr.pos.y][curr.pos.x].tileType == 0
+        ? TILETYPES.road
+        : newMap[curr.pos.y][curr.pos.x].tileType;
+  });
 
-  if (startPositionVertical == endPositionVertical) {
-    if (startPositionHorizontal < endPositionHorizontal) {
-      nextPost = start + 1;
-    } else if (startPositionHorizontal > endPositionHorizontal) {
-      nextPost = start - 1;
-    }
-  } else if (startPositionVertical < endPositionVertical) {
-    nextPost = start + TILES_WIDTH;
-  } else {
-    nextPost = start - TILES_WIDTH;
-  }
-
-  if (nextPost == end || mapTilesArray[nextPost] == TILETYPES.road) {
-    return true;
-  }
-
-  mapTilesArray[nextPost] =
-    mapTilesArray[nextPost] != 0 ? mapTilesArray[nextPost] : TILETYPES.road;
-
-  return drawRoad(nextPost, end);
+  return newMap;
 }
 
 function drawBuildings(buildingNumber) {
+  const buildingIndexes = [];
+
   for (let i = 0; i < buildingNumber; i++) {
-    let newLocation = -1;
-    while (newLocation === -1) {
-      newLocation = Math.floor(Math.random() * TILES_NUMBER);
+    let newPos = { y: 0, x: 0 };
+
+    let safetyTries = 50;
+    let found = false;
+
+    while (safetyTries >= 0 && !found) {
+      newPos.y = Math.floor(Math.random() * TILES_HEIGHT);
+      newPos.x = Math.floor(Math.random() * TILES_WIDTH);
+
+      if (mapTilesArray[newPos.y][newPos.x].tileType == TILETYPES.untouched) {
+        mapTilesArray[newPos.y][newPos.x].tileType = TILETYPES.building;
+
+        buildingIndexes.push(newPos);
+
+        found = true;
+      }
+
+      safetyTries--;
+
+      if (safetyTries == 0) {
+        alert("hey, couldn't build the map!");
+      }
+    }
+  }
+  return buildingIndexes;
+}
+
+function drawBuildingsWithRoadsAstar() {
+  var newSearch, newCreatedMap;
+
+  const map = astar();
+
+  const buildingIndexes = drawBuildings(BUILDINGS_NUMBER);
+
+  for (let i = 0; i < buildingIndexes.length; i++) {
+    map.init(mapTilesArray);
+
+    var destination = i;
+
+    while (destination == i) {
+      destination = Math.floor(Math.random() * buildingIndexes.length);
+    }
+
+    var newSearch = map.search(
+      buildingIndexes[i],
+      buildingIndexes[destination]
+    );
+
+    mapTilesArray = drawRoad(mapTilesArray, newSearch.path);
+  }
+
+  return newCreatedMap;
+}
+
+function drawBuildingsWithNeighbours(buildingNumber) {
+  for (let i = 0; i < buildingNumber; i++) {
+    let newLocation = { value: -1, yPos: 0, xPos: 0 };
+
+    while (newLocation.value === -1) {
+      newLocation.yPos = Math.floor(Math.random() * TILES_HEIGHT);
+      newLocation.yPos = Math.floor(Math.random() * TILES_WIDTH);
+
       let buildingTiles = getNeighboursTiles(newLocation);
 
-      if (!buildingTiles.find((value) => value > 0)) {
+      if (!buildingTiles.find((buldingTile) => buldingTile > 0)) {
         getNeighboursIndexes(newLocation).forEach(
           (value) => (mapTilesArray[value] = TILETYPES.building)
         );
 
         buildingIndexes.push(newLocation);
       } else {
-        newLocation = -1;
+        newLocation.value = -1;
       }
     }
   }
@@ -190,7 +252,6 @@ function drawBuildings(buildingNumber) {
 
 function drawRoadsConnectingBuildings(count = 0) {
   if (count == buildingIndexes.length) {
-    console.log(count);
     return;
   }
 
@@ -203,8 +264,6 @@ function drawRoadsConnectingBuildings(count = 0) {
 }
 
 function drawBuildingsWithRoads(count, isFirst = true) {
-  //console.log('terceiro');
-
   if (count == 0) return;
 
   if (isFirst) {
@@ -243,54 +302,22 @@ function writeOnCanvas(tilesArray = mapTilesArray, isError = false) {
 
   for (var yPos = 0; yPos < tilesArray.length; yPos++) {
     for (var xPos = 0; xPos < tilesArray[yPos].length; xPos++) {
-      tiles += tilesArray[yPos][xPos];
+      tiles += tilesArray[yPos][xPos].tileType;
     }
     tiles += "<br>";
   }
 
-  //let tiles = tilesArray.reduce((acc, numb) => {return acc + "" + numb});
-
-  // let tiles = tilesArray.reduce((acc, numb, index) => {
-  //   return index % TILES_WIDTH == 0 ? acc + "<br>" + numb : acc + "" + numb;
-  // });
-
   element.innerHTML = tiles;
-  console.log("escreveu");
 }
 
 //const isTestOk = testAspectRatio();
 const isTestOk = true;
 if (isTestOk) {
-  // setInterval(function () {
-  //   mapTilesArray = [...Array(TILES_NUMBER)].map(
-  //     (value) => TILETYPES.untouched
-  //   );
-  //   drawBuildingsWithRoads(BUILDINGS_NUMBER);
-  //   writeOnCanvas();
-  // }, 1000);
-
-  //drawBuildings(BUILDINGS_NUMBER);
-  //drawRoadsConnectingBuildings();
-
-  //writeOnCanvas();
-
-  // console.log(getNeighboursTiles(Math.floor(Math.random() * TILES_NUMBER)));
-  // console.log(getNeighboursIndexes(Math.floor(Math.random() * TILES_NUMBER)));
-
-  var newSearch = astar.search(
-    mapTilesArray,
-    { pos: { x: 1, y: 2 } },
-    { pos: { x: 4, y: 19 } }
-  );
-
-  var createdMap = mapTilesArray.map((index) =>
-    index.map((position) =>
-      newSearch.path.find((node) => node.id == position.id) ? 1 : 0
-    )
-  );
-  console.log(createdMap);
-
-  writeOnCanvas(createdMap);
+  setInterval(function () {
+    resetmapTilesArray();
+    drawBuildingsWithRoadsAstar();
+    writeOnCanvas();
+  }, 2000);
 } else {
   writeOnCanvas("isTestOk failed", true);
 }
