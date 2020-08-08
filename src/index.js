@@ -1,9 +1,9 @@
 import "./styles.css";
 import { astar } from "./astar";
 
-const TILES_WIDTH = 10;
-const TILES_HEIGHT = 10;
-const BUILDINGS_NUMBER = 2;
+const TILES_WIDTH = 30;
+const TILES_HEIGHT = 20;
+const BUILDINGS_NUMBER = 5;
 const TREES_NUMBER = 10;
 
 const TILETYPES = {
@@ -29,7 +29,7 @@ var currNodesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
   })
 );
 
-function resetcurrNodesArray() {
+function resetCurrNodesArray() {
   currNodesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
     [...Array(TILES_WIDTH)].map((curr, xPos) => {
       return {
@@ -88,13 +88,6 @@ function drawRoads() {
     }
 
     var newSearch = map.search(
-      buildingIndexes[i],
-      buildingIndexes[destination]
-    );
-
-    console.log(
-      "new search",
-      newSearch,
       buildingIndexes[i],
       buildingIndexes[destination]
     );
@@ -197,6 +190,10 @@ function drawWater(poolSize) {
 
   let newNode = currNodesArray[newPos.y][newPos.x];
 
+  if (!newNode) {
+    console.log("Warning: ", newNode, currNodesArray, newPos);
+  }
+
   findNextWaterNode(poolSize, newNode, waterArray);
 
   //there is no buildings on the surrounders && dont divide the map in 2pickedNumber
@@ -214,8 +211,8 @@ function drawWater(poolSize) {
 }
 
 function findNextWaterNode(count, current, waterArray, safeTry = 10) {
-  if (!current.pos) {
-    console.log(current, waterArray);
+  if (!current) {
+    console.log("Warning: ", current, waterArray, count);
   }
   if (current.tileType !== TILETYPES.water) {
     waterArray.push(current);
@@ -226,6 +223,7 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
     return waterArray;
   }
 
+  //Remove intruders
   var neighborNodes = getNeighborNodes(current).filter(
     (node) =>
       node !== -1 &&
@@ -246,7 +244,7 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
   neighborNodes.map((neighborNode) => {
     let neighborNodeNeighbours = getNeighborNodes(neighborNode);
 
-    //Remove
+    //Remove intruders
     let countWaterNeighbours = neighborNodeNeighbours.filter(
       (node) =>
         node !== -1 &&
@@ -271,14 +269,16 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
 
 {
   setInterval(function () {
-    resetcurrNodesArray();
+    resetCurrNodesArray();
 
     drawBuildings();
 
-    drawWater(50);
+    drawWater(20);
+    drawWater(20);
+    drawWater(20);
 
     drawRoads();
 
     writeOnCanvas();
-  }, 2000);
+  }, 500);
 }
