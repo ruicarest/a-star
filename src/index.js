@@ -179,7 +179,6 @@ function writeOnCanvas(tilesArray = currNodesArray, isError = false) {
 
 function drawWater(poolSize) {
   const waterArray = [poolSize];
-  let currNode = {};
 
   const newPos = {
     y: Math.floor(Math.random() * TILES_HEIGHT),
@@ -187,33 +186,89 @@ function drawWater(poolSize) {
   };
 
   let newNode = currNodesArray[newPos.y][newPos.x];
+
+  findNextWaterNode(poolSize, newNode, waterArray);
+
   //there is no buildings on the surrounders && dont divide the map in 2pickedNumber
   //is untouched
   //the most blocks of water the better the higher the rank
-  if (
-    newNode.tileType == TILETYPES.untouched &&
-    getNeighborNodes(newNode).every(
-      (node) => node === -1 || node.tileType === 0
-    )
-  ) {
-    console.log("found one", newPos);
-  } else {
-    console.log("nop", newPos);
-  }
+
+  // let neighbors = getNeighborNodes(newNode);
+
+  // if (
+  //   newNode.tileType == TILETYPES.untouched &&
+  //   neighbors.every(
+  //     (node) => node === -1 || node.tileType === 0
+  //   )
+  // ) {
 }
 
-// setInterval(function () {
-//   resetcurrNodesArray();
-//   drawBuildingsWithRoadsAstar();
-//   writeOnCanvas();
-// }, 2000);
+function findNextWaterNode(count, current, waterArray, safeTry = 10) {
+  if (!current.pos) {
+    console.log(current, waterArray);
+  }
+  if (current.tileType !== TILETYPES.water) {
+    waterArray.push(current);
+    currNodesArray[current.pos.y][current.pos.x].tileType = TILETYPES.water;
+  }
 
-resetcurrNodesArray();
+  if (count == 1) {
+    return waterArray;
+  }
 
-drawBuildings();
+  var neighborNodes = getNeighborNodes(current).filter(
+    (node) =>
+      node !== -1 &&
+      node.pos !== current.pos &&
+      node.tileType !== TILETYPES.water
+  );
 
-drawWater(10);
+  //No neighborNode undiscovered left
+  if (!Array.isArray(neighborNodes) || !neighborNodes.length) {
+    return findNextWaterNode(
+      count,
+      waterArray[Math.floor(Math.random() * waterArray.length)],
+      waterArray,
+      safeTry - 1
+    );
+  }
 
-drawRoads();
+  neighborNodes.map((neighborNode) => {
+    let neighborNodeNeighbours = getNeighborNodes(neighborNode);
 
-writeOnCanvas();
+    //Remove
+    let countWaterNeighbours = neighborNodeNeighbours.filter(
+      (node) =>
+        node !== -1 &&
+        node.tileType == TILETYPES.water &&
+        node.pos !== neighborNode.pos
+    ).length;
+
+    //lets get the one with highest score
+    neighborNode.waterNeighbours = Math.max(
+      countWaterNeighbours,
+      neighborNode.waterNeighbours ? neighborNode.waterNeighbours : 0
+    );
+  });
+
+  let newNode = neighborNodes.reduce((max = 0, node) =>
+    max.waterNeighbours > node.waterNeighbours ? max : node
+  );
+
+  //move to next water node
+  return findNextWaterNode(count - 1, newNode, waterArray);
+}
+
+{
+  setInterval(function () {
+    resetcurrNodesArray();
+
+    drawBuildings();
+
+    drawWater(20);
+
+    drawRoads();
+
+    writeOnCanvas();
+  }, 2000);
+}
