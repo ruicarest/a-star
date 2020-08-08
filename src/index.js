@@ -48,19 +48,16 @@ function drawBuildings(buildingNumber = BUILDINGS_NUMBER) {
   buildingIndexes = [];
 
   for (let i = 0; i < buildingNumber; i++) {
-    let newPos = { y: 0, x: 0 };
-
     let safetyTries = 50;
     let found = false;
 
     while (safetyTries >= 0 && !found) {
-      newPos.y = Math.floor(Math.random() * TILES_HEIGHT);
-      newPos.x = Math.floor(Math.random() * TILES_WIDTH);
+      let newNode = getRandomNode();
 
-      if (currNodesArray[newPos.y][newPos.x].tileType == TILETYPES.untouched) {
-        currNodesArray[newPos.y][newPos.x].tileType = TILETYPES.building;
+      if (newNode.tileType == TILETYPES.untouched) {
+        newNode.tileType = TILETYPES.building;
 
-        buildingIndexes.push(newPos);
+        buildingIndexes.push(newNode);
 
         found = true;
       }
@@ -68,7 +65,7 @@ function drawBuildings(buildingNumber = BUILDINGS_NUMBER) {
       safetyTries--;
 
       if (safetyTries == 0) {
-        alert("hey, couldn't build the map!");
+        alert("hey, couldn't find a spot for the next building!");
       }
     }
   }
@@ -88,8 +85,8 @@ function drawRoads() {
     }
 
     var newSearch = map.search(
-      buildingIndexes[i],
-      buildingIndexes[destination]
+      buildingIndexes[i].pos,
+      buildingIndexes[destination].pos
     );
 
     currNodesArray = drawRoad(currNodesArray, newSearch.path);
@@ -183,15 +180,10 @@ function writeOnCanvas(tilesArray = currNodesArray, isError = false) {
 function drawWater(poolSize) {
   const waterArray = [];
 
-  const newPos = {
-    y: Math.floor(Math.random() * TILES_HEIGHT),
-    x: Math.floor(Math.random() * TILES_WIDTH),
-  };
-
-  let newNode = currNodesArray[newPos.y][newPos.x];
+  let newNode = getRandomNode();
 
   if (!newNode) {
-    console.log("Warning: ", newNode, currNodesArray, newPos);
+    console.log("Warning first new node: ", newNode, currNodesArray, newPos);
   }
 
   findNextWaterNode(poolSize, newNode, waterArray);
@@ -210,10 +202,18 @@ function drawWater(poolSize) {
   // ) {
 }
 
+function getRandomNode() {
+  const newPos = {
+    y: Math.floor(Math.random() * TILES_HEIGHT),
+    x: Math.floor(Math.random() * TILES_WIDTH),
+  };
+
+  let randomNode = currNodesArray[newPos.y][newPos.x];
+
+  return randomNode;
+}
+
 function findNextWaterNode(count, current, waterArray, safeTry = 10) {
-  if (!current) {
-    console.log("Warning: ", current, waterArray, count);
-  }
   if (current.tileType !== TILETYPES.water) {
     waterArray.push(current);
     currNodesArray[current.pos.y][current.pos.x].tileType = TILETYPES.water;
@@ -233,12 +233,19 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
 
   //No neighborNode undiscovered left
   if (!Array.isArray(neighborNodes) || !neighborNodes.length) {
-    return findNextWaterNode(
-      count,
-      waterArray[Math.floor(Math.random() * waterArray.length)],
-      waterArray,
-      safeTry - 1
-    );
+    let nextNode;
+
+    if (waterArray.length < 2) {
+      nextNode = getRandomNode();
+    } else {
+      nextNode = waterArray[Math.floor(Math.random() * waterArray.length)];
+    }
+
+    if (!nextNode) {
+      console.log("Warning next known node: ", nextNode, waterArray, count);
+    }
+
+    return findNextWaterNode(count, nextNode, waterArray, safeTry - 1);
   }
 
   neighborNodes.map((neighborNode) => {
@@ -262,6 +269,10 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
   let newNode = neighborNodes.reduce((max = 0, node) =>
     max.waterNeighbours > node.waterNeighbours ? max : node
   );
+
+  if (!newNode) {
+    console.log("Warning new node: ", newNode, waterArray, count);
+  }
 
   //move to next water node
   return findNextWaterNode(count - 1, newNode, waterArray);
