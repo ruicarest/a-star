@@ -15,7 +15,7 @@ const TILETYPES = {
   grass: 5,
 };
 
-const buildingIndexes = [];
+var buildingIndexes = [];
 
 var currNodesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
   [...Array(TILES_WIDTH)].map((curr, xPos) => {
@@ -44,6 +44,9 @@ function resetcurrNodesArray() {
 }
 
 function drawBuildings(buildingNumber = BUILDINGS_NUMBER) {
+  //reset global buildings
+  buildingIndexes = [];
+
   for (let i = 0; i < buildingNumber; i++) {
     let newPos = { y: 0, x: 0 };
 
@@ -89,6 +92,13 @@ function drawRoads() {
       buildingIndexes[destination]
     );
 
+    console.log(
+      "new search",
+      newSearch,
+      buildingIndexes[i],
+      buildingIndexes[destination]
+    );
+
     currNodesArray = drawRoad(currNodesArray, newSearch.path);
   }
 }
@@ -99,7 +109,7 @@ function drawRoad(map, path) {
   path.some((curr) => {
     let currentTile = newMap[curr.pos.y][curr.pos.x];
 
-    if ([1, 2].includes(currentTile.tileType)) {
+    if ([TILETYPES.road, TILETYPES.building].includes(currentTile.tileType)) {
       return true;
     }
 
@@ -178,7 +188,7 @@ function writeOnCanvas(tilesArray = currNodesArray, isError = false) {
 }
 
 function drawWater(poolSize) {
-  const waterArray = [poolSize];
+  const waterArray = [];
 
   const newPos = {
     y: Math.floor(Math.random() * TILES_HEIGHT),
@@ -265,7 +275,7 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
 
     drawBuildings();
 
-    drawWater(20);
+    drawWater(50);
 
     drawRoads();
 
