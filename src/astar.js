@@ -1,5 +1,26 @@
 import _ from "lodash";
 
+const TILETYPES = {
+  untouched: 0,
+  road: 1,
+  building: 2,
+  tree: 3,
+  water: 4,
+  grass: 5,
+};
+
+const doubleCost = [TILETYPES.grass];
+
+const walls = [TILETYPES.tree, TILETYPES.water];
+
+function isWall(node) {
+  return walls.includes(node.tileType);
+}
+
+function findNodeCost(node) {
+  return doubleCost.includes(node.tileType) ? 2 : 1;
+}
+
 export function astar() {
   var grid;
 
@@ -13,6 +34,8 @@ export function astar() {
         grid[yPos][xPos].h = 0;
         grid[yPos][xPos].parent = null;
         grid[yPos][xPos].id = _.uniqueId("node");
+        grid[yPos][xPos].isWall = isWall(grid[yPos][xPos]);
+        grid[yPos][xPos].cost = findNodeCost(grid[yPos][xPos]);
       }
     }
   }
@@ -56,7 +79,10 @@ export function astar() {
       for (var i = 0; i < neighbors.length; i++) {
         var neighbor = neighbors[i];
 
-        if (closedList.find((node) => node.id == neighbor.id)) {
+        if (
+          closedList.find((node) => node.id == neighbor.id) ||
+          neighbor.isWall
+        ) {
           //|| neighbor.isWall()
           // not a valid node to process, skip to next neighbor
           continue;
@@ -64,7 +90,7 @@ export function astar() {
 
         // g score is the shortest distance from start to current node, we need to check if
         //   the path we have arrived at this neighbor is the shortest one we have seen yet
-        var gScore = currentNode.g + 1; // 1 is the distance from a node to it's neighbor
+        var gScore = currentNode.g + currentNode.cost; // 1 is the distance from a node to it's neighbor
         var gScoreIsBest = false;
 
         if (!openList.find((node) => node.id == neighbor.id)) {
@@ -89,6 +115,7 @@ export function astar() {
     }
 
     //found no path
+    console.log("cound't find the path");
     return { path: [] };
   }
 
