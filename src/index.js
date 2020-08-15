@@ -71,6 +71,12 @@ function drawBuildings(buildingNumber = BUILDINGS_NUMBER) {
   }
 }
 
+function drawTrees() {
+  let newTree = getRandomNode();
+
+  newTree.tileType = TILETYPES.tree;
+}
+
 //each road connects two buildings or meets another road
 function drawRoads() {
   const map = astar();
@@ -187,19 +193,6 @@ function drawWater(poolSize) {
   }
 
   findNextWaterNode(poolSize, newNode, waterArray);
-
-  //there is no buildings on the surrounders && dont divide the map in 2pickedNumber
-  //is untouched
-  //the most blocks of water the better the higher the rank
-
-  // let neighbors = getNeighborNodes(newNode);
-
-  // if (
-  //   newNode.tileType == TILETYPES.untouched &&
-  //   neighbors.every(
-  //     (node) => node === -1 || node.tileType === 0
-  //   )
-  // ) {
 }
 
 function getRandomNode() {
@@ -216,6 +209,7 @@ function getRandomNode() {
 function findNextWaterNode(count, current, waterArray, safeTry = 10) {
   if (current.tileType !== TILETYPES.water) {
     waterArray.push(current);
+    //BUG: pushing building nodes and turning them into water
     currNodesArray[current.pos.y][current.pos.x].tileType = TILETYPES.water;
   }
 
@@ -228,7 +222,8 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
     (node) =>
       node !== -1 &&
       node.pos !== current.pos &&
-      node.tileType !== TILETYPES.water
+      node.tileType !== TILETYPES.water &&
+      node.tileType !== TILETYPES.building
   );
 
   //No neighborNode undiscovered left
@@ -279,17 +274,49 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
 }
 
 {
-  setInterval(function () {
-    resetCurrNodesArray();
+  // setInterval(function () {
+  //   console.log("new search...");
+  //   resetCurrNodesArray();
 
-    drawBuildings();
+  //   drawBuildings();
 
-    drawWater(20);
-    drawWater(20);
-    drawWater(20);
+  //   drawWater(20);
+  //   drawWater(20);
+  //   drawWater(20);
 
-    drawRoads();
+  //   drawRoads();
 
-    writeOnCanvas();
-  }, 500);
+  //   writeOnCanvas();
+  // }, 3000);
+
+  resetCurrNodesArray();
+
+  drawBuildings();
+
+  writeOnCanvas();
+
+  drawWater(20);
+  drawWater(20);
+  drawWater(20);
+
+  drawRoads();
+
+  writeOnCanvas();
 }
+
+function loadNewMap() {
+  console.log("new search...");
+  resetCurrNodesArray();
+
+  drawBuildings();
+
+  drawWater(20);
+  drawWater(20);
+  drawWater(20);
+
+  drawRoads();
+
+  writeOnCanvas();
+}
+
+document.getElementById("loadNewMap").onclick = loadNewMap;
