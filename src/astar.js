@@ -9,7 +9,8 @@ const TILETYPES = {
   grass: 5,
 };
 
-const doubleCost = [TILETYPES.grass];
+const doubleCost = [TILETYPES.untouched];
+const tripleCost = [TILETYPES.grass];
 
 const walls = [TILETYPES.tree, TILETYPES.water];
 
@@ -18,7 +19,16 @@ function isWall(node) {
 }
 
 function findNodeCost(node) {
-  return doubleCost.includes(node.tileType) ? 2 : 1;
+  let cost = 1;
+
+  if (doubleCost.includes(node.tileType)) {
+    cost = 2;
+  }
+  if (tripleCost.includes(node.tileType)) {
+    cost = 3;
+  }
+
+  return cost;
 }
 
 export function astar() {
