@@ -71,10 +71,16 @@ function drawBuildings(buildingNumber = BUILDINGS_NUMBER) {
   }
 }
 
-function drawTrees() {
-  let newTree = getRandomNode();
+function drawTrees(treesNumber = TREES_NUMBER) {
+  for (let i = 0; i < treesNumber; i++) {
+    let newTree = getRandomNode();
 
-  newTree.tileType = TILETYPES.tree;
+    while (newTree.tileType != 0) {
+      newTree = getRandomNode();
+    }
+
+    newTree.tileType = TILETYPES.tree;
+  }
 }
 
 //each road connects two buildings or meets another road
@@ -183,7 +189,7 @@ function writeOnCanvas(tilesArray = currNodesArray, isError = false) {
   element.innerHTML = tiles;
 }
 
-function drawWater(poolSize) {
+function drawWater(nodeType, poolSize) {
   const waterArray = [];
 
   let newNode = getRandomNode();
@@ -192,7 +198,7 @@ function drawWater(poolSize) {
     console.log("Warning first new node: ", newNode, currNodesArray, newPos);
   }
 
-  findNextWaterNode(poolSize, newNode, waterArray);
+  findNextWaterNode(nodeType, poolSize, newNode, waterArray);
 }
 
 function getRandomNode() {
@@ -206,11 +212,11 @@ function getRandomNode() {
   return randomNode;
 }
 
-function findNextWaterNode(count, current, waterArray, safeTry = 10) {
-  if (current.tileType !== TILETYPES.water) {
+function findNextWaterNode(nodeType, count, current, waterArray, safeTry = 10) {
+  if (current.tileType !== nodeType) {
     waterArray.push(current);
     //BUG: pushing building nodes and turning them into water
-    currNodesArray[current.pos.y][current.pos.x].tileType = TILETYPES.water;
+    currNodesArray[current.pos.y][current.pos.x].tileType = nodeType;
   }
 
   if (count == 1) {
@@ -222,7 +228,7 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
     (node) =>
       node !== -1 &&
       node.pos !== current.pos &&
-      node.tileType !== TILETYPES.water &&
+      node.tileType !== nodeType &&
       node.tileType !== TILETYPES.building
   );
 
@@ -240,7 +246,13 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
       console.log("Warning next known node: ", nextNode, waterArray, count);
     }
 
-    return findNextWaterNode(count, nextNode, waterArray, safeTry - 1);
+    return findNextWaterNode(
+      nodeType,
+      count,
+      nextNode,
+      waterArray,
+      safeTry - 1
+    );
   }
 
   neighborNodes.map((neighborNode) => {
@@ -250,7 +262,7 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
     let countWaterNeighbours = neighborNodeNeighbours.filter(
       (node) =>
         node !== -1 &&
-        node.tileType == TILETYPES.water &&
+        node.tileType == nodeType &&
         node.pos !== neighborNode.pos
     ).length;
 
@@ -270,7 +282,7 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
   }
 
   //move to next water node
-  return findNextWaterNode(count - 1, newNode, waterArray);
+  return findNextWaterNode(nodeType, count - 1, newNode, waterArray);
 }
 
 {
@@ -295,9 +307,11 @@ function findNextWaterNode(count, current, waterArray, safeTry = 10) {
 
   writeOnCanvas();
 
-  drawWater(20);
-  drawWater(20);
-  drawWater(20);
+  drawWater(TILETYPES.water, 20);
+  drawWater(TILETYPES.water, 20);
+  drawWater(TILETYPES.water, 20);
+
+  drawTrees(30);
 
   drawRoads();
 
@@ -310,9 +324,18 @@ function loadNewMap() {
 
   drawBuildings();
 
-  drawWater(20);
-  drawWater(20);
-  drawWater(20);
+  drawWater(TILETYPES.water, 20);
+  drawWater(TILETYPES.water, 10);
+  drawWater(TILETYPES.water, 20);
+
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 8);
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 8);
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 18);
+
+  drawTrees(60);
 
   drawRoads();
 
