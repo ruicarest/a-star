@@ -4,7 +4,7 @@ export const WORLD_INFO = {
   BUILDINGS_NUMBER: 6,
   TREES_NUMBER: 30,
   TILETYPES: {
-    untouched: 0,
+    untouched: 10,
     road: 1,
     building: 2,
     tree: 3,
@@ -16,7 +16,7 @@ export const WORLD_INFO = {
 
 export const TILEMAPPING = [
   {
-    id: 0,
+    id: 10,
     name: "grass",
     column: 7,
     row: 1,
@@ -32,9 +32,10 @@ export const TILEMAPPING = [
   {
     id: 2,
     name: "building",
-    column: 0,
+    column: 1,
     row: 35,
     size: { width: 16, height: 16 },
+    backgroundID: WORLD_INFO.TILETYPES.untouched,
   },
   {
     id: 3,
@@ -42,6 +43,7 @@ export const TILEMAPPING = [
     column: 1,
     row: 37,
     size: { width: 16, height: 16 },
+    backgroundID: WORLD_INFO.TILETYPES.untouched,
   },
   {
     id: 4,

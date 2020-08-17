@@ -16,7 +16,7 @@ var buildingIndexes = [];
 currNodesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
   [...Array(TILES_WIDTH)].map((curr, xPos) => {
     return {
-      tileType: 0,
+      tileType: TILETYPES.untouched,
       pos: {
         x: xPos,
         y: yPos,
@@ -29,7 +29,7 @@ function resetCurrNodesArray() {
   currNodesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
     [...Array(TILES_WIDTH)].map((curr, xPos) => {
       return {
-        tileType: 0,
+        tileType: TILETYPES.untouched,
         pos: {
           x: xPos,
           y: yPos,
@@ -61,7 +61,7 @@ function drawBuildings(buildingNumber = BUILDINGS_NUMBER) {
       safetyTries--;
 
       if (safetyTries == 0) {
-        alert("hey, couldn't find a spot for the next building!");
+        console.log("hey, couldn't find a spot for the next building!");
       }
     }
   }
@@ -71,7 +71,7 @@ function drawTrees(treesNumber = TREES_NUMBER) {
   for (let i = 0; i < treesNumber; i++) {
     let newTree = getRandomNode();
 
-    while (newTree.tileType != 0) {
+    while (newTree.tileType != TILETYPES.untouched) {
       newTree = getRandomNode();
     }
 
@@ -112,7 +112,9 @@ function drawRoad(map, path) {
     }
 
     currentTile.tileType =
-      currentTile.tileType == 0 ? TILETYPES.road : currentTile.tileType;
+      currentTile.tileType == TILETYPES.untouched
+        ? TILETYPES.road
+        : currentTile.tileType;
     return false;
   });
 

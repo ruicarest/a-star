@@ -35,9 +35,25 @@ function renderMap() {
       let workdPosX = j * 16;
       let workdPosY = i * 16;
 
-      if (!tileInfo) {
-        console.log(tileInfo);
+      if (tileInfo.backgroundID) {
+        let backgroundTileInfo = TILEMAPPING.find((element) => {
+          //console.log(i, j, element, WORLD_INFO.WorldNodesArray);
+          return element.id == tileInfo.backgroundID;
+        });
+
+        buffer.drawImage(
+          tileSheet,
+          backgroundTileInfo.column * 16,
+          backgroundTileInfo.row * 16,
+          16,
+          16,
+          workdPosX,
+          workdPosY,
+          16,
+          16
+        );
       }
+
       buffer.drawImage(
         tileSheet,
         tileInfo.column * 16,

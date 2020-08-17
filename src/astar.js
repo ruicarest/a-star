@@ -1,13 +1,7 @@
 import _ from "lodash";
+import { WORLD_INFO } from "./worldInfo";
 
-const TILETYPES = {
-  untouched: 0,
-  road: 1,
-  building: 2,
-  tree: 3,
-  water: 4,
-  grass: 5,
-};
+const TILETYPES = WORLD_INFO.TILETYPES;
 
 const doubleCost = [TILETYPES.untouched];
 const tripleCost = [TILETYPES.grass];
