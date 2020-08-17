@@ -1,23 +1,19 @@
 import "./styles.css";
 import { astar } from "./astar";
+import { resize } from "./tilemanager";
+import { WORLD_INFO } from "./worldInfo";
 
-const TILES_WIDTH = 30;
-const TILES_HEIGHT = 20;
-const BUILDINGS_NUMBER = 5;
-const TREES_NUMBER = 10;
+const TILES_WIDTH = WORLD_INFO.TILES_WIDTH;
+const TILES_HEIGHT = WORLD_INFO.TILES_HEIGHT;
+const BUILDINGS_NUMBER = WORLD_INFO.BUILDINGS_NUMBER;
+const TREES_NUMBER = WORLD_INFO.TREES_NUMBER;
+const TILETYPES = WORLD_INFO.TILETYPES;
 
-const TILETYPES = {
-  untouched: 0,
-  road: 1,
-  building: 2,
-  tree: 3,
-  water: 4,
-  grass: 5,
-};
+var currNodesArray = WORLD_INFO.WorldNodesArray;
 
 var buildingIndexes = [];
 
-var currNodesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
+currNodesArray = [...Array(TILES_HEIGHT)].map((curr, yPos) =>
   [...Array(TILES_WIDTH)].map((curr, xPos) => {
     return {
       tileType: 0,
@@ -171,11 +167,11 @@ function getNeighborNodes(pivotNode) {
 
 function writeOnCanvas(tilesArray = currNodesArray, isError = false) {
   if (isError) {
-    document.querySelector("#canvas").innerHTML = tilesArray;
+    document.getElementById("tile-canvas").innerHTML = tilesArray;
     return;
   }
 
-  let element = document.querySelector("#canvas");
+  let element = document.getElementById("tile-canvas");
 
   var tiles = "";
 
@@ -285,37 +281,16 @@ function findNextWaterNode(nodeType, count, current, waterArray, safeTry = 10) {
   return findNextWaterNode(nodeType, count - 1, newNode, waterArray);
 }
 
+document.getElementById("loadNewMap").onclick = loadNewMap;
+
 {
   // setInterval(function () {
-  //   console.log("new search...");
-  //   resetCurrNodesArray();
+  //   loadNewMap();
+  // }, 1000);
 
-  //   drawBuildings();
+  loadNewMap();
 
-  //   drawWater(20);
-  //   drawWater(20);
-  //   drawWater(20);
-
-  //   drawRoads();
-
-  //   writeOnCanvas();
-  // }, 3000);
-
-  resetCurrNodesArray();
-
-  drawBuildings();
-
-  writeOnCanvas();
-
-  drawWater(TILETYPES.water, 20);
-  drawWater(TILETYPES.water, 20);
-  drawWater(TILETYPES.water, 20);
-
-  drawTrees(30);
-
-  drawRoads();
-
-  writeOnCanvas();
+  resize();
 }
 
 function loadNewMap() {
@@ -328,18 +303,20 @@ function loadNewMap() {
   drawWater(TILETYPES.water, 10);
   drawWater(TILETYPES.water, 20);
 
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 8);
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 8);
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 18);
+  // drawWater(TILETYPES.grass, 6);
+  // drawWater(TILETYPES.grass, 8);
+  // drawWater(TILETYPES.grass, 6);
+  // drawWater(TILETYPES.grass, 8);
+  // drawWater(TILETYPES.grass, 6);
+  // drawWater(TILETYPES.grass, 18);
 
-  drawTrees(60);
+  drawTrees();
 
   drawRoads();
 
   writeOnCanvas();
-}
 
-document.getElementById("loadNewMap").onclick = loadNewMap;
+  WORLD_INFO.WorldNodesArray = currNodesArray;
+
+  resize();
+}
