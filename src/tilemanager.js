@@ -2,9 +2,6 @@ import { WORLD_INFO, TILEMAPPING } from "./worldInfo";
 
 const TILES_WIDTH = WORLD_INFO.TILES_WIDTH;
 const TILES_HEIGHT = WORLD_INFO.TILES_HEIGHT;
-const BUILDINGS_NUMBER = WORLD_INFO.BUILDINGS_NUMBER5;
-const TREES_NUMBER = WORLD_INFO.TREES_NUMBER;
-const TILETYPES = WORLD_INFO.TILETYPES;
 
 /* Start loading the image. */
 var tileSheet = new Image();
@@ -81,6 +78,7 @@ export function resize(event) {
   renderMap();
 }
 
-tileSheet.addEventListener("load", function (event) {
-  resize();
-});
+// tileSheet.addEventListener("load", function (event) {
+//   console.log("resize on load image");
+//   resize();
+// });

@@ -17,7 +17,7 @@ export const WORLD_INFO = {
 export const TILEMAPPING = [
   {
     id: 10,
-    name: "grass",
+    name: "untouched",
     column: 7,
     row: 1,
     size: { width: 16, height: 16 },
@@ -50,6 +50,13 @@ export const TILEMAPPING = [
     name: "waterMiddle",
     column: 4,
     row: 22,
+    size: { width: 16, height: 16 },
+  },
+  {
+    id: 5,
+    name: "grass",
+    column: 10,
+    row: 2,
     size: { width: 16, height: 16 },
   },
 ];

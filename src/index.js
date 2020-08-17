@@ -286,13 +286,13 @@ function findNextWaterNode(nodeType, count, current, waterArray, safeTry = 10) {
 document.getElementById("loadNewMap").onclick = loadNewMap;
 
 {
-  // setInterval(function () {
-  //   loadNewMap();
-  // }, 1000);
+  setInterval(function () {
+    loadNewMap();
+  }, 1000);
 
-  loadNewMap();
+  // loadNewMap();
 
-  resize();
+  // resize();
 }
 
 function loadNewMap() {
@@ -305,18 +305,18 @@ function loadNewMap() {
   drawWater(TILETYPES.water, 10);
   drawWater(TILETYPES.water, 20);
 
-  // drawWater(TILETYPES.grass, 6);
-  // drawWater(TILETYPES.grass, 8);
-  // drawWater(TILETYPES.grass, 6);
-  // drawWater(TILETYPES.grass, 8);
-  // drawWater(TILETYPES.grass, 6);
-  // drawWater(TILETYPES.grass, 18);
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 8);
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 8);
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 18);
 
   drawTrees();
 
   drawRoads();
 
-  writeOnCanvas();
+  //writeOnCanvas();
 
   WORLD_INFO.WorldNodesArray = currNodesArray;
 
