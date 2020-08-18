@@ -283,24 +283,46 @@ function findNextWaterNode(nodeType, count, current, waterArray, safeTry = 10) {
   return findNextWaterNode(nodeType, count - 1, newNode, waterArray);
 }
 
-document.getElementById("loadNewMap").onclick = loadNewMap;
+let isAutoGenerating = false;
+let setIntervalID = null;
 
-{
-  setInterval(function () {
-    loadNewMap();
-  }, 1000);
+const autoFeatureBtn = document.getElementById("stop");
+const loadNewMapBtn = document.getElementById("loadNewMap");
 
-  // loadNewMap();
+autoFeatureBtn.style.backgroundColor = "lightgreen";
 
-  // resize();
-}
+loadNewMapBtn.onclick = loadNewMap;
+
+autoFeatureBtn.onclick = () => {
+  if (isAutoGenerating) {
+    isAutoGenerating = false;
+    clearInterval(setIntervalID);
+    autoFeatureBtn.innerText = "Start Auto";
+    autoFeatureBtn.style.backgroundColor = "lightgreen";
+  } else {
+    isAutoGenerating = true;
+    setIntervalID = setInterval(function () {
+      loadNewMap();
+    }, 2000);
+
+    autoFeatureBtn.innerText = "Stop Auto";
+    autoFeatureBtn.style.backgroundColor = "#eb8888"; //lightred
+  }
+};
+
+loadNewMap();
 
 function loadNewMap() {
+  const startTime = performance.now();
+
   console.log("new search...");
   resetCurrNodesArray();
 
   drawBuildings();
 
+  drawWater(TILETYPES.water, 20);
+  drawWater(TILETYPES.water, 10);
+  drawWater(TILETYPES.water, 20);
   drawWater(TILETYPES.water, 20);
   drawWater(TILETYPES.water, 10);
   drawWater(TILETYPES.water, 20);
@@ -312,6 +334,13 @@ function loadNewMap() {
   drawWater(TILETYPES.grass, 6);
   drawWater(TILETYPES.grass, 18);
 
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 8);
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 8);
+  drawWater(TILETYPES.grass, 6);
+  drawWater(TILETYPES.grass, 180);
+
   drawTrees();
 
   drawRoads();
@@ -321,4 +350,7 @@ function loadNewMap() {
   WORLD_INFO.WorldNodesArray = currNodesArray;
 
   resize();
+
+  const duration = performance.now() - startTime;
+  console.log(`someMethodIThinkMightBeSlow took ${duration}ms`);
 }
