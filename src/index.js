@@ -187,18 +187,6 @@ function writeOnCanvas(tilesArray = currNodesArray, isError = false) {
   element.innerHTML = tiles;
 }
 
-function drawWater(nodeType, poolSize) {
-  const waterArray = [];
-
-  let newNode = getRandomNode();
-
-  if (!newNode) {
-    console.log("Warning first new node: ", newNode, currNodesArray, newPos);
-  }
-
-  findNextWaterNode(nodeType, poolSize, newNode, waterArray);
-}
-
 function getRandomNode() {
   const newPos = {
     y: Math.floor(Math.random() * TILES_HEIGHT),
@@ -210,77 +198,86 @@ function getRandomNode() {
   return randomNode;
 }
 
-function findNextWaterNode(nodeType, count, current, waterArray, safeTry = 10) {
-  if (current.tileType !== nodeType) {
-    waterArray.push(current);
-    //BUG: pushing building nodes and turning them into water
-    currNodesArray[current.pos.y][current.pos.x].tileType = nodeType;
-  }
+function drawGroupTiles(Type, poolSize) {
+  var groupTilesArray = [];
+  var count = poolSize;
+  var nodeType = Type;
 
-  if (count == 1) {
-    return waterArray;
-  }
+  var current = getRandomNode();
 
-  //Remove intruders
-  var neighborNodes = getNeighborNodes(current).filter(
-    (node) =>
-      node !== -1 &&
-      node.pos !== current.pos &&
-      node.tileType !== nodeType &&
-      node.tileType !== TILETYPES.building
-  );
+  findNextGroupTile();
 
-  //No neighborNode undiscovered left
-  if (!Array.isArray(neighborNodes) || !neighborNodes.length) {
-    let nextNode;
-
-    if (waterArray.length < 2) {
-      nextNode = getRandomNode();
-    } else {
-      nextNode = waterArray[Math.floor(Math.random() * waterArray.length)];
+  function findNextGroupTile(safeTry = 10) {
+    if (current.tileType !== nodeType) {
+      groupTilesArray.push(current);
+      //BUG: pushing building nodes and turning them a group tile
+      currNodesArray[current.pos.y][current.pos.x].tileType = nodeType;
     }
 
-    if (!nextNode) {
-      console.log("Warning next known node: ", nextNode, waterArray, count);
+    if (count == 1) {
+      return groupTilesArray;
     }
-
-    return findNextWaterNode(
-      nodeType,
-      count,
-      nextNode,
-      waterArray,
-      safeTry - 1
-    );
-  }
-
-  neighborNodes.map((neighborNode) => {
-    let neighborNodeNeighbours = getNeighborNodes(neighborNode);
 
     //Remove intruders
-    let countWaterNeighbours = neighborNodeNeighbours.filter(
+    var neighborNodes = getNeighborNodes(current).filter(
       (node) =>
         node !== -1 &&
-        node.tileType == nodeType &&
-        node.pos !== neighborNode.pos
-    ).length;
-
-    //lets get the one with highest score
-    neighborNode.waterNeighbours = Math.max(
-      countWaterNeighbours,
-      neighborNode.waterNeighbours ? neighborNode.waterNeighbours : 0
+        node.pos !== current.pos &&
+        node.tileType !== nodeType &&
+        node.tileType !== TILETYPES.building
     );
-  });
 
-  let newNode = neighborNodes.reduce((max = 0, node) =>
-    max.waterNeighbours > node.waterNeighbours ? max : node
-  );
+    //No neighborNode undiscovered left
+    if (!Array.isArray(neighborNodes) || !neighborNodes.length) {
+      if (groupTilesArray.length < 2) {
+        current = getRandomNode();
+      } else {
+        current =
+          groupTilesArray[Math.floor(Math.random() * groupTilesArray.length)];
+      }
 
-  if (!newNode) {
-    console.log("Warning new node: ", newNode, waterArray, count);
+      if (!current) {
+        console.log(
+          "Warning next known node: ",
+          current,
+          groupTilesArray,
+          count
+        );
+      }
+
+      return findNextGroupTile(safeTry - 1);
+    }
+
+    neighborNodes.map((neighborNode) => {
+      let neighborNodeNeighbours = getNeighborNodes(neighborNode);
+
+      //Remove intruders
+      let countSameTypeNeighbours = neighborNodeNeighbours.filter(
+        (node) =>
+          node !== -1 &&
+          node.tileType == nodeType &&
+          node.pos !== neighborNode.pos
+      ).length;
+
+      //lets get the one with highest score
+      neighborNode.sameTypeNeighbours = Math.max(
+        countSameTypeNeighbours,
+        neighborNode.sameTypeNeighbours ? neighborNode.sameTypeNeighbours : 0
+      );
+    });
+
+    current = neighborNodes.reduce((max = 0, node) =>
+      max.sameTypeNeighbours > node.sameTypeNeighbours ? max : node
+    );
+
+    if (!current) {
+      console.log("Warning new node: ", current, groupTilesArray, count);
+    }
+
+    //move to next water node
+    count--;
+    return findNextGroupTile();
   }
-
-  //move to next water node
-  return findNextWaterNode(nodeType, count - 1, newNode, waterArray);
 }
 
 let isAutoGenerating = false;
@@ -320,26 +317,26 @@ function loadNewMap() {
 
   drawBuildings();
 
-  drawWater(TILETYPES.water, 20);
-  drawWater(TILETYPES.water, 10);
-  drawWater(TILETYPES.water, 20);
-  drawWater(TILETYPES.water, 20);
-  drawWater(TILETYPES.water, 10);
-  drawWater(TILETYPES.water, 20);
+  //drawGroupTiles(TILETYPES.water, 2);
+  drawGroupTiles(TILETYPES.water, 10);
+  drawGroupTiles(TILETYPES.water, 20);
+  // drawGroupTiles(TILETYPES.water, 20);
+  // drawGroupTiles(TILETYPES.water, 10);
+  // drawGroupTiles(TILETYPES.water, 20);
 
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 8);
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 8);
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 18);
+  // drawGroupTiles(TILETYPES.grass, 6);
+  // drawGroupTiles(TILETYPES.grass, 8);
+  // drawGroupTiles(TILETYPES.grass, 6);
+  // drawGroupTiles(TILETYPES.grass, 8);
+  // drawGroupTiles(TILETYPES.grass, 6);
+  // drawGroupTiles(TILETYPES.grass, 18);
 
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 8);
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 8);
-  drawWater(TILETYPES.grass, 6);
-  drawWater(TILETYPES.grass, 180);
+  // drawGroupTiles(TILETYPES.grass, 6);
+  drawGroupTiles(TILETYPES.grass, 8);
+  // drawGroupTiles(TILETYPES.grass, 6);
+  // drawGroupTiles(TILETYPES.grass, 8);
+  // drawGroupTiles(TILETYPES.grass, 6);
+  // drawGroupTiles(TILETYPES.grass, 180);
 
   drawTrees();
 
