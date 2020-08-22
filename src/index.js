@@ -3,25 +3,14 @@ import { drawRoads } from "./road-manager";
 import { resize } from "./render-manager";
 import { WORLD_INFO } from "./worldInfo";
 import { drawGroupTiles } from "./group-manager";
-import { getRandomNode, resetcurrNodesMatrix } from "./tile-utils";
+import { resetcurrNodesMatrix } from "./tile-utils";
 import { drawBuildings } from "./buildings-manager";
+import { drawTrees } from "./trees-manager";
 
 const TREES_NUMBER = WORLD_INFO.TREES_NUMBER;
 const TILETYPES = WORLD_INFO.TILETYPES;
 
 resetcurrNodesMatrix();
-
-function drawTrees(treesNumber = TREES_NUMBER) {
-  for (let i = 0; i < treesNumber; i++) {
-    let newTree = getRandomNode(WORLD_INFO.WorldNodesMatrix);
-
-    while (newTree.tileType != TILETYPES.untouched) {
-      newTree = getRandomNode(WORLD_INFO.WorldNodesMatrix);
-    }
-
-    newTree.tileType = TILETYPES.tree;
-  }
-}
 
 let isAutoGenerating = false;
 let setIntervalID = null;
