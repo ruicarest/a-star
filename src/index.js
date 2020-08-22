@@ -1,13 +1,12 @@
 import "./styles.css";
 import { drawRoads } from "./road-manager";
-import { resize } from "./render-manager";
+import { renderMap, loadTileSheet } from "./render-manager";
 import { WORLD_INFO } from "./worldInfo";
 import { drawGroupTiles } from "./group-manager";
 import { resetcurrNodesMatrix } from "./tile-utils";
 import { drawBuildings } from "./buildings-manager";
 import { drawTrees } from "./trees-manager";
 
-const TREES_NUMBER = WORLD_INFO.TREES_NUMBER;
 const TILETYPES = WORLD_INFO.TILETYPES;
 
 resetcurrNodesMatrix();
@@ -39,7 +38,13 @@ autoFeatureBtn.onclick = () => {
   }
 };
 
-loadNewMap();
+loadTileSheet().then((tilesheet) => {
+  if (tilesheet) {
+    loadNewMap();
+  } else {
+    console.log("no tilesheet found: ", tileSheet);
+  }
+});
 
 function loadNewMap() {
   const startTime = performance.now();
@@ -74,10 +79,8 @@ function loadNewMap() {
 
   drawRoads();
 
-  //writeOnCanvas();
-
-  resize();
+  renderMap();
 
   const duration = performance.now() - startTime;
-  console.log(`someMethodIThinkMightBeSlow took ${duration}ms`);
+  console.log(`Map loading took ${duration}ms`);
 }
