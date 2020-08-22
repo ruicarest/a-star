@@ -11,7 +11,7 @@ export const WORLD_INFO = {
     water: 4,
     grass: 5,
   },
-  WorldNodesArray: null,
+  WorldNodesMatrix: null,
 };
 
 export const TILEMAPPING = [

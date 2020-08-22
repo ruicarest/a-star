@@ -18,14 +18,14 @@ function renderMap() {
   for (let i = 0; i < TILES_HEIGHT; i++) {
     for (let j = 0; j < TILES_WIDTH; j++) {
       let tileInfo = TILEMAPPING.find((element) => {
-        //console.log(i, j, element, WORLD_INFO.WorldNodesArray);
-        return element.id == WORLD_INFO.WorldNodesArray[i][j].tileType;
+        //console.log(i, j, element, WORLD_INFO.WorldNodesMatrix);
+        return element.id == WORLD_INFO.WorldNodesMatrix[i][j].tileType;
       });
 
       if (!tileInfo) {
         console.log(
           "NO tile info: ",
-          WORLD_INFO.WorldNodesArray[i][j].tileType
+          WORLD_INFO.WorldNodesMatrix[i][j].tileType
         );
       }
 
@@ -34,7 +34,7 @@ function renderMap() {
 
       if (tileInfo.backgroundID) {
         let backgroundTileInfo = TILEMAPPING.find((element) => {
-          //console.log(i, j, element, WORLD_INFO.WorldNodesArray);
+          //console.log(i, j, element, WORLD_INFO.WorldNodesMatrix);
           return element.id == tileInfo.backgroundID;
         });
 

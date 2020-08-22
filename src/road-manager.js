@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { WORLD_INFO } from "./worldInfo";
+import { buildingIndexes } from "./buildings-manager";
 
 const TILETYPES = WORLD_INFO.TILETYPES;
 
@@ -25,7 +26,7 @@ function findNodeCost(node) {
   return cost;
 }
 
-export function astar() {
+function astar() {
   var grid;
 
   function init(map) {
@@ -156,4 +157,49 @@ export function astar() {
   }
 
   return { search, getCurrentMap: getGrid, init };
+}
+
+//each road connects two buildings or meets another road
+export function drawRoads() {
+  const map = astar();
+
+  for (let i = 0; i < buildingIndexes.length; i++) {
+    map.init(WORLD_INFO.WorldNodesMatrix);
+
+    var destination = i;
+
+    while (destination == i) {
+      destination = Math.floor(Math.random() * buildingIndexes.length);
+    }
+
+    var newSearch = map.search(
+      buildingIndexes[i].pos,
+      buildingIndexes[destination].pos
+    );
+
+    WORLD_INFO.WorldNodesMatrix = drawRoad(
+      WORLD_INFO.WorldNodesMatrix,
+      newSearch.path
+    );
+  }
+}
+
+function drawRoad(map, path) {
+  let newMap = map;
+
+  path.some((curr) => {
+    let currentTile = newMap[curr.pos.y][curr.pos.x];
+
+    if ([TILETYPES.road, TILETYPES.building].includes(currentTile.tileType)) {
+      return true;
+    }
+
+    currentTile.tileType =
+      currentTile.tileType == TILETYPES.untouched
+        ? TILETYPES.road
+        : currentTile.tileType;
+    return false;
+  });
+
+  return newMap;
 }
