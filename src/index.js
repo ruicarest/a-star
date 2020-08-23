@@ -7,6 +7,8 @@ import { resetcurrNodesMatrix } from "./tile-utils";
 import { drawBuildings } from "./buildings-manager";
 import { drawTrees } from "./trees-manager";
 
+/* IDEA: having maps of 16x16 seems a good size, with screen loading */
+
 const TILETYPES = WORLD_INFO.TILETYPES;
 
 resetcurrNodesMatrix();
@@ -54,26 +56,9 @@ function loadNewMap() {
 
   drawBuildings();
 
-  //drawGroupTiles(TILETYPES.water, 2);
-  drawGroupTiles(TILETYPES.water, 10);
-  drawGroupTiles(TILETYPES.water, 20);
-  // drawGroupTiles(TILETYPES.water, 20);
-  // drawGroupTiles(TILETYPES.water, 10);
-  // drawGroupTiles(TILETYPES.water, 20);
+  drawGroupTiles(TILETYPES.water, 100);
 
-  // drawGroupTiles(TILETYPES.grass, 6);
-  // drawGroupTiles(TILETYPES.grass, 8);
-  // drawGroupTiles(TILETYPES.grass, 6);
-  // drawGroupTiles(TILETYPES.grass, 8);
-  // drawGroupTiles(TILETYPES.grass, 6);
-  // drawGroupTiles(TILETYPES.grass, 18);
-
-  // drawGroupTiles(TILETYPES.grass, 6);
   drawGroupTiles(TILETYPES.grass, 8);
-  // drawGroupTiles(TILETYPES.grass, 6);
-  // drawGroupTiles(TILETYPES.grass, 8);
-  // drawGroupTiles(TILETYPES.grass, 6);
-  // drawGroupTiles(TILETYPES.grass, 180);
 
   drawTrees();
 
