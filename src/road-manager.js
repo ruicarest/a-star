@@ -120,7 +120,7 @@ function astar() {
     }
 
     //found no path
-    console.log("cound't find the path");
+    console.log("Error: cound't find the path");
     return { path: [] };
   }
 

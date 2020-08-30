@@ -51,20 +51,19 @@ loadTileSheet().then((tilesheet) => {
 function loadNewMap() {
   const startTime = performance.now();
 
-  console.log("new search...");
   resetcurrNodesMatrix();
 
-  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
-  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
-  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
-  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
-  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
 
   drawTrees();
 
-  // drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
-  // drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
-  // drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
+  drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
+  drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
+  drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
 
   drawBuildings();
 

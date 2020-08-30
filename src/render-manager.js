@@ -26,7 +26,6 @@ export function loadTileSheet(url = "TileSheet.png") {
 
 export function renderMap() {
   detailMap();
-  console.log("rendering...");
   for (let i = 0; i < TILES_HEIGHT; i++) {
     for (let j = 0; j < TILES_WIDTH; j++) {
       let tileInfo;
@@ -95,7 +94,7 @@ export function resize() {
 }
 
 tileSheet.addEventListener("load", function () {
-  console.log("resize on load image");
+  //console.log("resize on load image");
 });
 
 function detailMap() {
@@ -167,8 +166,6 @@ function getRoadTileIndex(node) {
     default:
       subTypeCode = 0;
   }
-
-  console.log(NeighborNodesMap, subTypeCode);
 
   return subTypeCode;
 }
