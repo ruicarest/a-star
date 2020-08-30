@@ -54,13 +54,19 @@ function loadNewMap() {
   console.log("new search...");
   resetcurrNodesMatrix();
 
-  drawBuildings();
-
-  drawGroupTiles(TILETYPES.water, 100);
-
-  drawGroupTiles(TILETYPES.grass, 8);
+  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
+  // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
 
   drawTrees();
+
+  // drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
+  // drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
+  // drawGroupTiles(TILETYPES.grass, Math.floor(Math.random() * 20 + 20));
+
+  drawBuildings();
 
   drawRoads();
 

@@ -1,7 +1,9 @@
-import { WORLD_INFO, TILEMAPPING } from "./worldInfo";
+import { WORLD_INFO, TILEMAPPING, THEME_TILEMAPPING } from "./worldInfo";
+import { getNeighborNodes } from "./tile-utils";
 
 const TILES_WIDTH = WORLD_INFO.TILES_WIDTH;
 const TILES_HEIGHT = WORLD_INFO.TILES_HEIGHT;
+const TILE_TYPES = WORLD_INFO.TILETYPES;
 
 let buffer = document.getElementById("map-canvas").getContext("2d");
 let context = document.getElementById("map-canvas").getContext("2d");
@@ -23,12 +25,20 @@ export function loadTileSheet(url = "TileSheet.png") {
 }
 
 export function renderMap() {
+  detailMap();
+  console.log("rendering...");
   for (let i = 0; i < TILES_HEIGHT; i++) {
     for (let j = 0; j < TILES_WIDTH; j++) {
-      let tileInfo = TILEMAPPING.find((element) => {
-        return element.id == WORLD_INFO.WorldNodesMatrix[i][j].tileType;
-      });
-
+      let tileInfo;
+      if (WORLD_INFO.WorldNodesMatrix[i][j].tileType == TILE_TYPES.road) {
+        tileInfo = THEME_TILEMAPPING[1].roadTiles.find((element) => {
+          return element.id == WORLD_INFO.WorldNodesMatrix[i][j].tileSubType;
+        });
+      } else {
+        tileInfo = TILEMAPPING.find((element) => {
+          return element.id == WORLD_INFO.WorldNodesMatrix[i][j].tileType;
+        });
+      }
       if (!tileInfo) {
         console.log(
           "NO tile info: ",
@@ -87,3 +97,78 @@ export function resize() {
 tileSheet.addEventListener("load", function () {
   console.log("resize on load image");
 });
+
+function detailMap() {
+  for (let i = 0; i < TILES_HEIGHT; i++) {
+    for (let j = 0; j < TILES_WIDTH; j++) {
+      let currentNode = WORLD_INFO.WorldNodesMatrix[i][j];
+
+      if (currentNode.tileType == TILE_TYPES.road) {
+        currentNode.tileSubType = getRoadTileIndex(
+          WORLD_INFO.WorldNodesMatrix[i][j]
+        );
+      }
+    }
+  }
+}
+
+function getRoadTileIndex(node) {
+  const Neighbor = getNeighborNodes(node);
+  let NeighborNodesMap = "";
+
+  NeighborNodesMap =
+    Neighbor[1].tileType == TILE_TYPES.road
+      ? NeighborNodesMap + "1"
+      : NeighborNodesMap + "0";
+
+  NeighborNodesMap =
+    Neighbor[3].tileType == TILE_TYPES.road
+      ? NeighborNodesMap + "1"
+      : NeighborNodesMap + "0";
+
+  NeighborNodesMap =
+    Neighbor[5].tileType == TILE_TYPES.road
+      ? NeighborNodesMap + "1"
+      : NeighborNodesMap + "0";
+
+  NeighborNodesMap =
+    Neighbor[7].tileType == TILE_TYPES.road
+      ? NeighborNodesMap + "1"
+      : NeighborNodesMap + "0";
+
+  let subTypeCode;
+
+  switch (NeighborNodesMap) {
+    case "1001": //vertical
+    case "0001":
+    case "1000":
+      subTypeCode = 0;
+      break;
+    case "0100":
+    case "0010":
+    case "0110": //horizontal
+      subTypeCode = 10;
+      break;
+    case "1100":
+      subTypeCode = 9;
+      break;
+    case "0011":
+      subTypeCode = 1;
+      break;
+    case "1010":
+      subTypeCode = 7;
+      break;
+    case "0101":
+      subTypeCode = 3;
+      break;
+    case "1111":
+      subTypeCode = 5;
+      break;
+    default:
+      subTypeCode = 0;
+  }
+
+  console.log(NeighborNodesMap, subTypeCode);
+
+  return subTypeCode;
+}
