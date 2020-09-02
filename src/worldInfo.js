@@ -14,61 +14,60 @@ export const WORLD_INFO = {
   WorldNodesMatrix: null,
 };
 
-export const TILEMAPPING = [
-  {
-    id: 10,
-    name: "untouched",
-    column: 7,
-    row: 1,
-  },
-  {
-    id: 1,
-    name: "road",
-    column: 4,
-    row: 1,
-  },
-  {
-    id: 2,
-    name: "building",
-    column: 1,
-    row: 35,
-    backgroundID: WORLD_INFO.TILETYPES.untouched,
-  },
-  {
-    id: 3,
-    name: "tree",
-    column: 1,
-    row: 37,
-    backgroundID: WORLD_INFO.TILETYPES.untouched,
-  },
-  {
-    id: 4,
-    name: "waterMiddle",
-    column: 4,
-    row: 22,
-  },
-  {
-    id: 5,
-    name: "grass",
-    column: 10,
-    row: 2,
-  },
-];
-
 export const THEME_TILEMAPPING = [
   {
     themeID: 0,
     themeName: "Default",
+    miscelaneous: [
+      {
+        id: 10,
+        name: "untouched",
+        column: 7,
+        row: 1,
+      },
+      {
+        id: 1,
+        name: "road",
+        column: 4,
+        row: 1,
+      },
+      {
+        id: 2,
+        name: "building",
+        column: 1,
+        row: 35,
+        backgroundID: WORLD_INFO.TILETYPES.untouched,
+      },
+      {
+        id: 3,
+        name: "tree",
+        column: 1,
+        row: 37,
+        backgroundID: WORLD_INFO.TILETYPES.untouched,
+      },
+      {
+        id: 4,
+        name: "waterMiddle",
+        column: 4,
+        row: 22,
+      },
+      {
+        id: 5,
+        name: "grass",
+        column: 10,
+        row: 2,
+      },
+    ],
   },
   {
     themeID: 1,
     themeName: "Spring",
     terrainTiles: [
       {
-        id: 5,
-        name: "grass",
-        column: 10,
-        row: 2,
+        id: 10,
+        name: "untouched",
+        column: 7,
+        row: 1,
       },
     ],
     roadTiles: [
@@ -136,6 +135,86 @@ export const THEME_TILEMAPPING = [
         id: 8,
         name: "top_bottom_left",
         column: 10,
+        row: 7,
+      },
+    ],
+  },
+  {
+    themeID: 2,
+    themeName: "Winter",
+    terrainTiles: [
+      {
+        id: 10,
+        name: "untouched",
+        column: 1,
+        row: 1,
+      },
+    ],
+    roadTiles: [
+      {
+        id: 0,
+        name: "top_bottom",
+        column: 2,
+        row: 6,
+      },
+      {
+        id: 1,
+        name: "bottom_right",
+        column: 0,
+        row: 6,
+      },
+      {
+        id: 3,
+        name: "bottom_left",
+        column: 1,
+        row: 6,
+      },
+      {
+        id: 5,
+        name: "road_crossroads",
+        column: 2,
+        row: 7,
+      },
+      {
+        id: 7,
+        name: "top_right",
+        column: 0,
+        row: 7,
+      },
+      {
+        id: 9,
+        name: "top_left",
+        column: 1,
+        row: 7,
+      },
+      {
+        id: 10,
+        name: "left_right",
+        column: 3,
+        row: 7,
+      },
+      {
+        id: 2,
+        name: "top_bottom_right",
+        column: 2,
+        row: 8,
+      },
+      {
+        id: 4,
+        name: "top_left_right",
+        column: 4,
+        row: 8,
+      },
+      {
+        id: 6,
+        name: "bottom_left_right",
+        column: 4,
+        row: 6,
+      },
+      {
+        id: 8,
+        name: "top_bottom_left",
+        column: 4,
         row: 7,
       },
     ],
