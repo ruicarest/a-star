@@ -114,22 +114,22 @@ function detailMap() {
 function getRoadTileIndex(node) {
   const Neighbor = getNeighborNodes(node);
   let NeighborNodesMap = "";
-
+  //top
   NeighborNodesMap =
     Neighbor[1].tileType == TILE_TYPES.road
       ? NeighborNodesMap + "1"
       : NeighborNodesMap + "0";
-
+  //left
   NeighborNodesMap =
     Neighbor[3].tileType == TILE_TYPES.road
       ? NeighborNodesMap + "1"
       : NeighborNodesMap + "0";
-
+  //right
   NeighborNodesMap =
     Neighbor[5].tileType == TILE_TYPES.road
       ? NeighborNodesMap + "1"
       : NeighborNodesMap + "0";
-
+  //bottom
   NeighborNodesMap =
     Neighbor[7].tileType == TILE_TYPES.road
       ? NeighborNodesMap + "1"
@@ -138,14 +138,14 @@ function getRoadTileIndex(node) {
   let subTypeCode;
 
   switch (NeighborNodesMap) {
-    case "1001": //vertical
+    case "1001":
     case "0001":
     case "1000":
       subTypeCode = 0;
       break;
     case "0100":
     case "0010":
-    case "0110": //horizontal
+    case "0110":
       subTypeCode = 10;
       break;
     case "1100":
@@ -160,8 +160,20 @@ function getRoadTileIndex(node) {
     case "0101":
       subTypeCode = 3;
       break;
-    case "1111":
+    case "1111": //crossroads
       subTypeCode = 5;
+      break;
+    case "1011":
+      subTypeCode = 2;
+      break;
+    case "1110":
+      subTypeCode = 4;
+      break;
+    case "0111":
+      subTypeCode = 6;
+      break;
+    case "1101":
+      subTypeCode = 8;
       break;
     default:
       subTypeCode = 0;
