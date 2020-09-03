@@ -2,7 +2,7 @@ export const WORLD_INFO = {
   TILES_WIDTH: 40,
   TILES_HEIGHT: 40,
   BUILDINGS_NUMBER: 20,
-  TREES_NUMBER: 0,
+  TREES_NUMBER: 10,
   TILETYPES: {
     untouched: 10,
     road: 1,
@@ -62,10 +62,44 @@ export const THEME_TILEMAPPING = [
   {
     themeID: 1,
     themeName: "Spring",
+    miscelaneous: [
+      {
+        id: 1,
+        name: "road",
+        column: 4,
+        row: 1,
+      },
+      {
+        id: 2,
+        name: "building",
+        column: 1,
+        row: 35,
+        backgroundID: 10, //terraintile
+      },
+      {
+        id: 3,
+        name: "tree",
+        column: 1,
+        row: 37,
+        backgroundID: 10, //terraintile
+      },
+      {
+        id: 4,
+        name: "waterMiddle",
+        column: 6,
+        row: 12,
+      },
+      {
+        id: 5,
+        name: "herb",
+        column: 10,
+        row: 2,
+      },
+    ],
     terrainTiles: [
       {
         id: 10,
-        name: "untouched",
+        name: "grass",
         column: 7,
         row: 1,
       },
@@ -142,12 +176,46 @@ export const THEME_TILEMAPPING = [
   {
     themeID: 2,
     themeName: "Winter",
+    miscelaneous: [
+      {
+        id: 1,
+        name: "road",
+        column: 4,
+        row: 1,
+      },
+      {
+        id: 2,
+        name: "building",
+        column: 1,
+        row: 35,
+        backgroundID: 10, //terraintile
+      },
+      {
+        id: 3,
+        name: "tree",
+        column: 2,
+        row: 37,
+        backgroundID: 10, //terraintile
+      },
+      {
+        id: 4,
+        name: "waterMiddle",
+        column: 4,
+        row: 22,
+      },
+      {
+        id: 5,
+        name: "winter_herb",
+        column: 9,
+        row: 0,
+      },
+    ],
     terrainTiles: [
       {
         id: 10,
-        name: "untouched",
-        column: 1,
-        row: 1,
+        name: "snow",
+        column: 4,
+        row: 4,
       },
     ],
     roadTiles: [

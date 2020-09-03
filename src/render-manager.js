@@ -24,39 +24,38 @@ export function loadTileSheet(url = "TileSheet.png") {
   });
 }
 
-const MapTheme = 2;
+const MapTheme = 1;
 
 export function renderMap() {
   detailMap();
   for (let i = 0; i < TILES_HEIGHT; i++) {
     for (let j = 0; j < TILES_WIDTH; j++) {
       let tileInfo;
-      if (WORLD_INFO.WorldNodesMatrix[i][j].tileType == TILE_TYPES.road) {
+
+      const { tileType, tileSubType } = WORLD_INFO.WorldNodesMatrix[i][j];
+
+      if (tileType == TILE_TYPES.road) {
         tileInfo = THEME_TILEMAPPING[MapTheme].roadTiles.find((element) => {
-          return element.id == WORLD_INFO.WorldNodesMatrix[i][j].tileSubType;
+          return element.id == tileSubType;
         });
-      }
-      if (WORLD_INFO.WorldNodesMatrix[i][j].tileType == TILE_TYPES.untouched) {
+      } else if (tileType == TILE_TYPES.untouched) {
         tileInfo = THEME_TILEMAPPING[MapTheme].terrainTiles.find((element) => {
-          return element.id == WORLD_INFO.WorldNodesMatrix[i][j].tileType;
+          return element.id == tileType;
         });
       } else {
-        tileInfo = THEME_TILEMAPPING[0].miscelaneous.find((element) => {
-          return element.id == WORLD_INFO.WorldNodesMatrix[i][j].tileType;
+        tileInfo = THEME_TILEMAPPING[MapTheme].miscelaneous.find((element) => {
+          return element.id == tileType;
         });
       }
       if (!tileInfo) {
-        console.log(
-          "NO tile info: ",
-          WORLD_INFO.WorldNodesMatrix[i][j].tileType
-        );
+        console.log("NO tile info: ", tileType);
       }
 
       let workdPosX = j * 16;
       let workdPosY = i * 16;
 
       if (tileInfo.backgroundID) {
-        let backgroundTileInfo = THEME_TILEMAPPING[0].miscelaneous.find(
+        let backgroundTileInfo = THEME_TILEMAPPING[MapTheme].terrainTiles.find(
           (element) => {
             return element.id == tileInfo.backgroundID;
           }
