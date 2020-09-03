@@ -81,7 +81,7 @@ export function resetcurrNodesMatrix() {
   );
 }
 
-function writeTileNumbersOnCanvas(
+export function writeTileNumbersOnCanvas(
   tilesArray = WORLD_INFO.WorldNodesMatrix,
   isError = false
 ) {
