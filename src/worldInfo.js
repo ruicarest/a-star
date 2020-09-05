@@ -106,6 +106,12 @@ export const THEME_TILEMAPPING = [
     ],
     roadTiles: [
       {
+        id: 11,
+        name: "bridge",
+        column: 10,
+        row: 28,
+      },
+      {
         id: 0,
         name: "top_bottom",
         column: 8,
@@ -219,6 +225,12 @@ export const THEME_TILEMAPPING = [
       },
     ],
     roadTiles: [
+      {
+        id: 11,
+        name: "bridge",
+        column: 10,
+        row: 28,
+      },
       {
         id: 0,
         name: "top_bottom",

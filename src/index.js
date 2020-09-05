@@ -61,16 +61,15 @@ function loadNewMap() {
     for (let j = 0; j < WORLD_INFO.TILES_WIDTH; j++) {
       let noise = snoise2(j * 0.0523, i * 0.0523 + adding);
 
-      WORLD_INFO.WorldNodesMatrix[i][j].tileType =
-        noise < 0 ? 10 : noise < 0.2 ? 5 : 4;
+      WORLD_INFO.WorldNodesMatrix[i][j].tileType = noise < 0 ? 10 : 4;
     }
   }
 
   adding++;
 
-  drawTrees(10);
+  drawTrees(30);
 
-  drawBuildings(5);
+  drawBuildings(10);
 
   drawRoads();
 

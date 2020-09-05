@@ -120,32 +120,42 @@ function detailMap() {
 }
 
 function getRoadTileIndex(node) {
-  const Neighbor = getNeighborNodes(node);
-  let NeighborNodesMap = "";
-  //top
-  NeighborNodesMap =
-    Neighbor[1].tileType == TILE_TYPES.road
-      ? NeighborNodesMap + "1"
-      : NeighborNodesMap + "0";
-  //left
-  NeighborNodesMap =
-    Neighbor[3].tileType == TILE_TYPES.road
-      ? NeighborNodesMap + "1"
-      : NeighborNodesMap + "0";
-  //right
-  NeighborNodesMap =
-    Neighbor[5].tileType == TILE_TYPES.road
-      ? NeighborNodesMap + "1"
-      : NeighborNodesMap + "0";
-  //bottom
-  NeighborNodesMap =
-    Neighbor[7].tileType == TILE_TYPES.road
-      ? NeighborNodesMap + "1"
-      : NeighborNodesMap + "0";
+  const Neighbors = getNeighborNodes(node);
+
+  let waterNodes = Neighbors.filter((n) => {
+    return n.tileType == TILE_TYPES.water;
+  });
 
   let subTypeCode;
 
-  switch (NeighborNodesMap) {
+  if (waterNodes.length > 3) {
+    subTypeCode = 11;
+    return subTypeCode;
+  }
+
+  let NeighborsNodesMap = "";
+  //top
+  NeighborsNodesMap =
+    Neighbors[1].tileType == TILE_TYPES.road
+      ? NeighborsNodesMap + "1"
+      : NeighborsNodesMap + "0";
+  //left
+  NeighborsNodesMap =
+    Neighbors[3].tileType == TILE_TYPES.road
+      ? NeighborsNodesMap + "1"
+      : NeighborsNodesMap + "0";
+  //right
+  NeighborsNodesMap =
+    Neighbors[5].tileType == TILE_TYPES.road
+      ? NeighborsNodesMap + "1"
+      : NeighborsNodesMap + "0";
+  //bottom
+  NeighborsNodesMap =
+    Neighbors[7].tileType == TILE_TYPES.road
+      ? NeighborsNodesMap + "1"
+      : NeighborsNodesMap + "0";
+
+  switch (NeighborsNodesMap) {
     case "1001":
     case "0001":
     case "1000":
