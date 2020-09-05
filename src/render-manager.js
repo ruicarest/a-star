@@ -2,6 +2,7 @@ import { WORLD_INFO, THEME_TILEMAPPING } from "./worldInfo";
 import { getNeighborNodes } from "./tile-utils";
 
 const TILES_WIDTH = WORLD_INFO.TILES_WIDTH;
+const THEME = WORLD_INFO.THEME;
 const TILES_HEIGHT = WORLD_INFO.TILES_HEIGHT;
 const TILE_TYPES = WORLD_INFO.TILETYPES;
 
@@ -24,9 +25,7 @@ export function loadTileSheet(url = "TileSheet.png") {
   });
 }
 
-const MapTheme = 1;
-
-export function renderMap() {
+export function renderMap(theme = THEME) {
   detailMap();
   for (let i = 0; i < TILES_HEIGHT; i++) {
     for (let j = 0; j < TILES_WIDTH; j++) {
@@ -35,15 +34,15 @@ export function renderMap() {
       const { tileType, tileSubType } = WORLD_INFO.WorldNodesMatrix[i][j];
 
       if (tileType == TILE_TYPES.road) {
-        tileInfo = THEME_TILEMAPPING[MapTheme].roadTiles.find((element) => {
+        tileInfo = THEME_TILEMAPPING[theme].roadTiles.find((element) => {
           return element.id == tileSubType;
         });
       } else if (tileType == TILE_TYPES.untouched) {
-        tileInfo = THEME_TILEMAPPING[MapTheme].terrainTiles.find((element) => {
+        tileInfo = THEME_TILEMAPPING[theme].terrainTiles.find((element) => {
           return element.id == tileType;
         });
       } else {
-        tileInfo = THEME_TILEMAPPING[MapTheme].miscelaneous.find((element) => {
+        tileInfo = THEME_TILEMAPPING[theme].miscelaneous.find((element) => {
           return element.id == tileType;
         });
       }
@@ -55,7 +54,7 @@ export function renderMap() {
       let workdPosY = i * 16;
 
       if (tileInfo.backgroundID) {
-        let backgroundTileInfo = THEME_TILEMAPPING[MapTheme].terrainTiles.find(
+        let backgroundTileInfo = THEME_TILEMAPPING[theme].terrainTiles.find(
           (element) => {
             return element.id == tileInfo.backgroundID;
           }

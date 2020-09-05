@@ -3,6 +3,7 @@ export const WORLD_INFO = {
   TILES_HEIGHT: 40,
   BUILDINGS_NUMBER: 20,
   TREES_NUMBER: 10,
+  THEME: 1,
   TILETYPES: {
     untouched: 10,
     road: 1,

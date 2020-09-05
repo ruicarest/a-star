@@ -73,7 +73,10 @@ function loadNewMap() {
 
   drawRoads();
 
-  renderMap();
+  let randomTheme = Math.floor(Math.random() * 2) + 1;
+
+  renderMap(randomTheme);
+
   //writeTileNumbersOnCanvas();
 
   // drawGroupTiles(TILETYPES.water, Math.floor(Math.random() * 100 + 20));
