@@ -19,11 +19,24 @@ let isAutoGenerating = false;
 let setIntervalID = null;
 
 const autoFeatureBtn = document.getElementById("stop");
-const loadNewMapBtn = document.getElementById("loadNewMap");
+//const loadNewMapBtn = document.getElementById("loadNewMap").onclick = loadNewMap;
+const worldInfoForm = document.getElementById("worldInfo");
+
+worldInfoForm.elements["buildingsInput"].value = WORLD_INFO.BUILDINGS_NUMBER;
+worldInfoForm.elements["treesInput"].value = WORLD_INFO.TREES_NUMBER;
 
 autoFeatureBtn.style.backgroundColor = "lightgreen";
 
-loadNewMapBtn.onclick = loadNewMap;
+worldInfoForm.onsubmit = (e) => {
+  e.preventDefault();
+
+  WORLD_INFO.TREES_NUMBER = worldInfoForm.elements["treesInput"].value;
+  WORLD_INFO.BUILDINGS_NUMBER = worldInfoForm.elements["buildingsInput"].value;
+
+  loadNewMap();
+
+  console.log("changed", WORLD_INFO.TREES_NUMBER);
+};
 
 autoFeatureBtn.onclick = () => {
   if (isAutoGenerating) {
@@ -67,9 +80,9 @@ function loadNewMap() {
 
   adding++;
 
-  drawTrees(30);
+  drawTrees();
 
-  drawBuildings(10);
+  drawBuildings();
 
   drawRoads();
 

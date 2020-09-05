@@ -1,12 +1,11 @@
 import { WORLD_INFO } from "./worldInfo";
 import { getRandomNode } from "./tile-utils";
 
-const BUILDINGS_NUMBER = WORLD_INFO.BUILDINGS_NUMBER;
 const TILETYPES = WORLD_INFO.TILETYPES;
 
 export var buildingIndexes = [];
 
-export function drawBuildings(buildingNumber = BUILDINGS_NUMBER) {
+export function drawBuildings(buildingNumber = WORLD_INFO.BUILDINGS_NUMBER) {
   //reset global buildings
   buildingIndexes = [];
 
@@ -28,7 +27,7 @@ export function drawBuildings(buildingNumber = BUILDINGS_NUMBER) {
       safetyTries--;
 
       if (safetyTries == 0) {
-        console.log("hey, couldn't find a spot for the next building!");
+        console.log("WARNING: couldn't find a spot for the next building");
       }
     }
   }

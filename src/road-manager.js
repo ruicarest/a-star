@@ -7,6 +7,10 @@ const TILETYPES = WORLD_INFO.TILETYPES;
 
 //each road connects two buildings or meets another road
 export function drawRoads() {
+  if (buildingIndexes.length < 2) {
+    console.log("2+ buildings to draw roads");
+    return;
+  }
   const map = astar();
 
   for (let i = 0; i < buildingIndexes.length; i++) {

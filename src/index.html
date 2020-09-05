@@ -9,9 +9,16 @@
     <body>
       <div id="tile-canvas"></div>
       <canvas id="map-canvas">span</canvas>
-      <div class="control">
-        <button id="loadNewMap">Load new map</button>
-        <button id="stop">Start Auto</button>
+      <div id="mapInfoControls">
+        <!-- <button id="loadNewMap">Load new map</button> -->
+        <form name="worldInfo" id="worldInfo">
+          <div id="mapInfoInputs">
+            <div>Trees: <input type="number" id="treesInput" /></div>
+            <div>Buildings: <input type="number" id="buildingsInput" /></div>
+          </div>
+          <button id="stop">Start Auto</button>
+          <input type="submit" value="Load new map" id="mapInfoSubmit" />
+        </form>
       </div>
     </body>
   </html>
