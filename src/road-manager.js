@@ -196,10 +196,12 @@ function drawRoad(map, path) {
       return true;
     }
 
+    if (currentTile.tileType == TILETYPES.water) {
+      currentTile.isBridge = true;
+    }
+
     currentTile.tileType = TILETYPES.road;
-    // currentTile.tileType == TILETYPES.untouched
-    //   ? TILETYPES.road
-    //   : currentTile.tileType;
+
     return false;
   });
 

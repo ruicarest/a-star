@@ -121,13 +121,9 @@ function detailMap() {
 function getRoadTileIndex(node) {
   const Neighbors = getNeighborNodes(node);
 
-  let waterNodes = Neighbors.filter((n) => {
-    return n.tileType == TILE_TYPES.water;
-  });
-
   let subTypeCode;
 
-  if (waterNodes.length > 3) {
+  if (node.isBridge) {
     subTypeCode = 11;
     return subTypeCode;
   }
