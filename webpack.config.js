@@ -1,4 +1,6 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+
 module.exports = {
   module: {
     rules: [
@@ -28,6 +30,7 @@ module.exports = {
       template: "./src/index.html",
       filename: "./index.html",
     }),
+    new CopyPlugin([{ from: "public/images", to: "images" }]),
   ],
   //avoid error https://github.com/react-boilerplate/react-boilerplate/issues/2279
   node: {
