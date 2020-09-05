@@ -50,6 +50,8 @@ loadTileSheet().then((tilesheet) => {
   }
 });
 
+var adding = 1;
+
 function loadNewMap() {
   const startTime = performance.now();
 
@@ -57,10 +59,20 @@ function loadNewMap() {
 
   for (let i = 0; i < WORLD_INFO.TILES_HEIGHT; i++) {
     for (let j = 0; j < WORLD_INFO.TILES_WIDTH; j++) {
+      let noise = snoise2(j * 0.0523, i * 0.0523 + adding);
+
       WORLD_INFO.WorldNodesMatrix[i][j].tileType =
-        snoise2(j * 0.1123, i * 0.1123) < 0 ? 4 : 5;
+        noise < 0 ? 10 : noise < 0.2 ? 5 : 4;
     }
   }
+
+  adding++;
+
+  drawTrees(10);
+
+  drawBuildings(5);
+
+  drawRoads();
 
   renderMap();
   //writeTileNumbersOnCanvas();

@@ -6,8 +6,8 @@ const TILETYPES = WORLD_INFO.TILETYPES;
 
 const doubleCost = [TILETYPES.untouched];
 const tripleCost = [TILETYPES.grass];
-
-const walls = [TILETYPES.tree, TILETYPES.water];
+const quadrupleCost = [TILETYPES.water];
+const walls = [TILETYPES.tree];
 
 function isWall(node) {
   return walls.includes(node.tileType);
@@ -18,9 +18,10 @@ function findNodeCost(node) {
 
   if (doubleCost.includes(node.tileType)) {
     cost = 2;
-  }
-  if (tripleCost.includes(node.tileType)) {
+  } else if (tripleCost.includes(node.tileType)) {
     cost = 3;
+  } else if (quadrupleCost.includes(node.tileType)) {
+    cost = 4;
   }
 
   return cost;
@@ -185,6 +186,7 @@ export function drawRoads() {
 }
 
 function drawRoad(map, path) {
+  //redundant
   let newMap = map;
 
   path.some((curr) => {
@@ -194,10 +196,10 @@ function drawRoad(map, path) {
       return true;
     }
 
-    currentTile.tileType =
-      currentTile.tileType == TILETYPES.untouched
-        ? TILETYPES.road
-        : currentTile.tileType;
+    currentTile.tileType = TILETYPES.road;
+    // currentTile.tileType == TILETYPES.untouched
+    //   ? TILETYPES.road
+    //   : currentTile.tileType;
     return false;
   });
 
