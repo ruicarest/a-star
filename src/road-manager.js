@@ -144,10 +144,10 @@ function astar() {
     if (grid[y + 1] && grid[y + 1][x]) {
       ret.push(grid[y + 1][x]);
     }
-    if (grid[y][x - 1] && grid[y][x - 1]) {
+    if (grid[y][x - 1]) {
       ret.push(grid[y][x - 1]);
     }
-    if (grid[y][x + 1] && grid[y][x + 1]) {
+    if (grid[y][x + 1]) {
       ret.push(grid[y][x + 1]);
     }
     return ret;
